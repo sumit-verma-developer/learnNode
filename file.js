@@ -7,15 +7,15 @@ const fs = require('fs');
 
 
 //importent to use the fs module
-// sysnchronous call
+
 fs.writeFileSync("./test.txt", "Hello buddy!"); // write to file
 
-// Asysnchronous call
+// Asysnchronous call (non-blocking operation)
 fs.writeFile("./test.txt", "Hello buddy  Asysnchronous call !", (err) => { 
 
 }); 
 
-// sysnchronous call return
+// sysnchronous  call  (blocking operation)  and return  
 const result = fs.readFileSync("./contact.txt", "utf-8"); // read file
 console.log("result",result);
 
