@@ -40,3 +40,8 @@
 1747307310544 : / New request recieved 
 1747307310547 : /favicon.ico New request recieved 
 1747307310653 : /favicon.ico New request recieved 
+1747399244876 :  GET /api/users
+1747399265644 :  GET /api/users
+1747399272575 :  GET /api/users
+1747399277431 :  GET /api/users
+1747399379786 :  ::1: GET: /api/users
