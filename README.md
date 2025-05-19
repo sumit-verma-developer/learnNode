@@ -8,3 +8,10 @@
 -default thread pool size-4
 -maximum thread pool create  based on cpu core 
 -like max -8core cpu - maximum create thread 8
+# Create Url shortner 
+-using nanoid and shortid
+-create  short url by bitly of any website.
+# server side rendering
+-html server per render hota hain ese bolte hain server side rendring
+-templating engins EJS-Embedded javascript templating,Pug,handlebars
+-ye engins humare liye server side render ka kaam krte hain
