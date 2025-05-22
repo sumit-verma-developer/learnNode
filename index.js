@@ -47,9 +47,16 @@ app.use("/:shordId", async (req, res) => {
   res.redirect(entry.redirectURL);
 });
 
-app.get("/url/:shordId", async(req,res)=>{
+app.get("/test", async(req,res)=>{
 const allUrls=await URL.find({})
-return res.render('home')
+return res.end(`
+  <html>
+  <body>
+  <h1>All URLs</h1>
+  <table>
+  </body>
+
+  </html>`)
 });
 
 app.listen(PORT, () => {
