@@ -6,8 +6,21 @@
     <title>home page</title>
 </head>
 <body>
-    <h1>
+
+    
+    <!-- <h1>
+        <%= urls.forEach(url => { %>
+            <%= url.shortId %>
+        <% }) %>
         Hey i am from server
-    </h1>
+    </h1> -->
+<h1>Url Shortner</h1>
+<div>
+    <form action="/url" method="post">
+        <label for="url">Enter the url</label>
+        <input type="text" name="url" id="url">
+        <button type="submit">Submit</button>
+    </form>
+</div>
 </body>
 </html>
