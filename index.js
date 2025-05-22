@@ -7,7 +7,7 @@ const { logReqRes } = require("./middlewares");
 const urlRoute = require("./routs/url");
 const staticRoute = require('./routs/staticRouter')
 const authuserRoute = require("./routs/authuser");
-const { restrictToLoggedinUserOnly } = require("./middlewares/auth");
+const { restrictToLoggedinUserOnly,checkAuth } = require("./middlewares/auth");
 
 
 const app = express();
@@ -37,7 +37,7 @@ app.use(cookieParser());
 
 app.use("/url",restrictToLoggedinUserOnly, urlRoute);
 app.use("/user", authuserRoute);
-app.use("/static", staticRoute);
+app.use("/static",checkAuth, staticRoute);
 
 app.get("/", (req, res) => {
   return res.redirect("/static");
