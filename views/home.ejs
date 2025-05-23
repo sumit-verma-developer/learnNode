@@ -3,24 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home page</title>
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .url-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .url-form form {
+            display: flex;
+            gap: 15px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .url-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .short-url {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .short-url:hover {
+            text-decoration: underline;
+        }
+        .original-url {
+            color: #666;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .copy-btn {
+            padding: 6px 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+        .no-urls {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 18px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .click-count {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #495057;
+        }
+        .user-info {
+            text-align: right;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
 </head>
 <body>
+    <div class="user-info">
+        <% if (typeof user !== 'undefined') { %>
+            Welcome, <%= user.name %>!
+            <a href="/user/logout" class="logout-btn">Logout</a>
+        <% } else { %>
+            <a href="/user/login" class="logout-btn">Login</a>
+        <% } %>
+    </div>
 
-    
-    <!-- <h1>
-        <%= urls.forEach(url => { %>
-            <%= url.shortId %>
-        <% }) %>
-        Hey i am from server
-    </h1> -->
-<h1>Url Shortner</h1>
-<div>
-    <form action="/url" method="post">
-        <label for="url">Enter the url</label>
-        <input type="text" name="url" id="url">
-        <button type="submit">Submit</button>
-    </form>
-</div>
+    <h1>URL Shortener</h1>
+    <div class="url-form">
+        <form action="/url" method="post">
+            <input type="text" name="url" id="url" placeholder="Enter your URL here" required>
+            <button type="submit">Shorten URL</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <% if (typeof urls !== 'undefined' && urls.length > 0) { %>
+            <div class="url-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Short URL</th>
+                            <th>Original URL</th>
+                            <th>Clicks</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% urls.forEach(function(url) { %>
+                            <tr>
+                                <td>
+                                    <a href="/<%= url.shortId %>" target="_blank" class="short-url">
+                                        http://localhost:3000/<%= url.shortId %>
+                                    </a>
+                                </td>
+                                <td class="original-url" title="<%= url.redirectURL %>">
+                                    <%= url.redirectURL %>
+                                </td>
+                                <td>
+                                    <span class="click-count">
+                                        <%= url.visitHistory ? url.visitHistory.length : 0 %> clicks
+                                    </span>
+                                </td>
+                                <td><%= new Date(url.createdAt).toLocaleString() %></td>
+                                <td>
+                                    <button class="copy-btn" onclick="copyToClipboard('http://localhost:3000/<%= url.shortId %>')">
+                                        Copy
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="no-urls">
+                <p>No URLs shortened yet. Try creating one above!</p>
+            </div>
+        <% } %>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>

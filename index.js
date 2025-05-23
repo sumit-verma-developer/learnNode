@@ -1,11 +1,14 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 // const cors = require("cors");
 const { connectMongoDB } = require("./connection");
 const { logReqRes } = require("./middlewares");
 const urlRoute = require("./routs/url");
-const staticRoute=require('./routs/staticRouter')
+const staticRoute = require('./routs/staticRouter')
 const authuserRoute = require("./routs/authuser");
+const { restrictToLoggedinUserOnly,checkAuth } = require("./middlewares/auth");
+
 
 const app = express();
 const PORT = 3000;
@@ -14,7 +17,7 @@ const PORT = 3000;
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
-app.set("views", path.resolve("./views"));
+app.set("views", path.join(__dirname, "views"));
 
 // connection
 connectMongoDB("mongodb://localhost:27017/short-url")
@@ -23,16 +26,34 @@ connectMongoDB("mongodb://localhost:27017/short-url")
 
 const userRouter = require("./routs/user");
 const URL = require("./models/url");
+
 //middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(logReqRes("log.text"));
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
-// app.use("/api/users", userRouter);
-// app.use("/url/", urlRoute);
-app.use("/static",staticRoute)
-app.use("/auth",authuserRoute)
+
+app.use("/url",restrictToLoggedinUserOnly, urlRoute);
+app.use("/user", authuserRoute);
+app.use("/static",checkAuth, staticRoute);
+
+app.get("/", (req, res) => {
+  return res.redirect("/static");
+});
+
+app.get("/signup", (req, res) => {
+  return res.render("signup");
+});
+
+app.get("/login", (req, res) => {
+  return res.render("login");
+});
+
+
+
+
 // app.use("/:shordId", async (req, res) => {
 //   const shortId = req.params.shordId;
 //   try {
@@ -62,8 +83,6 @@ app.use("/auth",authuserRoute)
 //   const allUrls = await URL.find({});
 //   return res.render("home", { urls: allUrls, name: "sumit" });
 // });
-
-
 
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
