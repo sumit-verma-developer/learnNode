@@ -14,7 +14,7 @@ const PORT = 3000;
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
-app.set("view", path.resolve("./views"));
+app.set("views", path.resolve("./views"));
 
 // connection
 connectMongoDB("mongodb://localhost:27017/short-url")
