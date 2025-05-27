@@ -26,16 +26,18 @@ async function handleUserLogin(req, res) {
     // setUser(sessionId, user);  //state full
 
     const token = setUser(user);
-    //   res.cookie("uid",token,
+    res.cookie("token", token);
+    return res.redirect("/");
+
+    // res.cookie("uid",token,
     //   //   {
     //   //   domain:'', // dot  means any subdomain access  without dot (.) is run on specific
     //   // }
     // )
 
-    return res.json({ token });
+    // return res.json({ token });
 
     // res.cookie('uid', sessionId);
-    return res.redirect("/static");
   } catch (error) {
     console.error("Login error:", error);
     return res.render("login", { error: "An error occurred during login" });
